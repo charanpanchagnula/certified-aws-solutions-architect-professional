@@ -4,8 +4,9 @@
 - RDS provides managed database instances, which can themselves hold one or more databases
 - Benefits of RDS are the we don't need to manage the physical hardware, the server operating system or the database system itself
 - RDS supports MySQL, MariaDB, PostgreSQL, Oracle, Microsoft SQL Server
-- Amazon Aurora: it is a db engine created by AWS and we can select it as well for usage
-- RDS Subnet Group: list of subnets which an RDS database can use. Generally it is best practice to have on Subnet Group per database deployment
+- Amazon Aurora: it is a db engine created by AWS and we can select it as well for usage, but it is a different product.
+- RDS Subnet Group: list of subnets which an RDS database can use. Generally it is best practice to have one Subnet Group per database deployment
+- RDS is a managed service, no access to OS or SSH access (except RDS Custom)
 
 ## RDS Database Instance
 
@@ -37,7 +38,8 @@
     - RDS is accessed via provided endpoint address (CNAME)
     - With a single instance the endpoint address points the instance itself, with multi AZ, by default the endpoint points to the primary instance
     - We can not directly access the standby instance
-    - If an error occurs with the primary instance, RDS automatically changes the endpoint to point to the standby replica. This failover occurs in around 60-120 seconds
+    - Other things such as backups to S3 can occur from the standby. Data is moved to S3 and replicated across multiple AZs in that region. This places no extra load on the primary.
+    - If an error occurs with the primary instance, RDS automatically changes the endpoint to point to the standby replica. This failover occurs in around 60-120 seconds. In this case, the database CNAME changes from primary to standby.
     - Multi AZ is not available in the Free-tier (generally costs double as it would the single AZ)
     - Backups are taken from the standby instance (removes performance impact)
     - In case of a failover the DNS name will be updated to point to the standby replica instance. Since this is a DNS change, for the update it generally takes between 60-120 seconds to occur. This can be lessened by removing DNS caching in the application
@@ -52,7 +54,7 @@
 - Multi AZ Cluster:
     - RDS is capable of having one writer replicate to two reader instances. We can have 2 readers only!
     - These readers are in different AZs compared to the writer
-    - Compared two Aurora cluster mode, Multi AZ cluster can have 2 readers only, while Aurora Cluster can have more
+    - Compared to Aurora cluster mode, Multi AZ cluster can have 2 readers only, while Aurora Cluster can have more
     - In case of Multi AZ cluster the instances to which data is replicated are usable, compared to Multi AZ instance mode when they are not
     - In terms of replication the data is viewed as committed when one of the readers confirms that it was written
     - Other comparisons two Aurora Cluster:
@@ -104,13 +106,13 @@
 - The primary instance and read replica is kept sync using asynchronous replication
 - There can be a small amount of lag in case of replication
 - Read replicas can be created in a different AZ or different region (CRR - Cross-Region Replication)
-- We can 5 direct read-replicas per DB instance
+- We can create 5 direct read-replicas per DB instance
 - Each read-replica provides an additional instance of read performance
 - Read-replicas can also have read-replicas, but lag starts to be a problem in this case
 - Read-replicas can provide global performance improvements
 - Snapshots and backups improve RPO but not RTO. Read-replicas offer near 0 RPO
 - Read-replicas can be promoted to primary in case of a failure. This offers low RTO as well (lags of minutes)
-- Read-replicas can replicate data corruption
+- If there is data corruption, Read-replicas will also have the same data corruption.
 
 ## Data Security
 
@@ -135,9 +137,10 @@
 - RDS proxies provide multiplexing: a smaller number of connections can be used to connect to the database while having a larger number of applications using the database through the proxy. This helps to reduce the load on the database
 - RDS Proxy can help with database failover events abstracting this from the applications. The proxy can wait until a healthy database instance is in place and can automatically connect to it
 - When to use RDS proxy?
-    - In case we have errors such as `Too many connections`. An RDS proxy can reduce the number of connections to the dabase while being able to handle many more connections from the applications to itself
+    - In case we have errors such as `Too many connections`. An RDS proxy can reduce the number of connections to the database while being able to handle many more connections from the applications to itself
     - Useful when using AWS Lambda, we won't need to invoke a new connection after each invocation of our function. Saves time by connection reuse and IAM auth
     - Useful for long running applications (SAAS apps) by reducing latency
+    - Where resilience to a db failure is a priority
 - RDS Proxy key facts:
     - Fully managed by RDS/Aurora
     - By default provides auto scaling, HA
@@ -156,5 +159,5 @@
 - RDS custom bridges this gap, we can utilize RDS but still get access to customization we would have when running a DB instance on EC2
 - Currently RDS custom works from MSSQL or Oracle
 - We can connect to the underlying OS using SSH, RDP or Session Manager
-- RDS custom will run withing our AWS account. Classic RDS will run in an AWS managed environment
+- RDS custom will run within our AWS account. Classic RDS will run in an AWS managed environment
 - If we need to perform RDS customization for RDS Custom, we need to look inside the Database Automation settings to make sure we wont have any disruption caused by the Database Automation. We need to pause Database Automation for this period

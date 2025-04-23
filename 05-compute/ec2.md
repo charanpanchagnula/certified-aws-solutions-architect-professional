@@ -66,21 +66,21 @@
 ## Capacity Reservations
 
 - AWS prioritizes any scheduled commitment for delivering EC2 capacity
-- After scheduled instances on-demand is prioritized
+- After reserved instances on-demand is prioritized
 - The leftover capacity can be used for spot instances
 - Capacity reservation is different compared to reserved instances
 - Regional reservation 
     - Provides a billing discount for valid instances launched in any AZ in that region
-    - While this is flexible, region reservation don't reserve capacity within az AZ - risky if the capacity is limited during a major fault
+    - While this is flexible, region reservation don't reserve capacity within an AZ - risky if the capacity is limited during a major fault
 - Zonal reservation: 
-    - Same billing discount as for region reservation, but the reservation applies only to specific AZs
+    - Same billing discount as for region reservation, but the reservation applies only to specific AZs. They do reserve capacity in the specific AZs
 - Regional/zonal reservation commitment is 1 or 3 years
 - On-Demand capacity reservation: can be booked to ensure we always have access to capacity in an AZ when we need it but at full on-demand price. No term limits, but we pay regardless if we consume the reservation or not
 - Capacity reservations do not provide any billing benefit, we just reserve the capacity for EC compute
 
 ## EC2 Savings Plan
 
-- A hourly commitment for 1 or 3 years term
+- A hourly commitment to AWS for 1 or 3 years term
 - Saving Plan can be 2 different types:
     - General compute dollar amounts: we can save up to 66% version on-demand
     - EC2 Saving Plan: up to 72% saving for EC2
@@ -90,18 +90,18 @@
 
 ## EC2 Networking
 
-- Instances are created with a primary ENI, this can not be removed or detached from the instance
-- Secondary ENIs can be added to an instance which can be in different subnets (NOT AZs!)
-- Secondary ENIs can be detached and attached to other instances
+- Instances are created with a primary ENI, this can not be removed or detached from the instance. They are deleted when instance is terminated.
+- Secondary ENIs can be added to an instance which can be in different subnets in the same AZ (NOT different AZs!)
+- Secondary ENIs can be detached and attached to other instances as long as they're in the same AZ
 - Security Groups are associated with an ENI, not an EC2 instances
-- Every instances is allocated a primary private IPv4 address from the subnet range. This IP address remains the within the lifetime of EC2 instance
+- Every ENI is allocated a primary private IPv4 address from the subnet range. This IP address remains the within the lifetime of ENI and thus, for the lifetime of the EC2 instance.
 - The primary IP address is exposed to the OS
-- ENIs can also have one or more secondary IP addresses depending on the instance type
+- ENIs can also have one or more secondary IP addresses depending on the instance type (Larger instances will generally allow more IP addresses). The secondary IP addresses are also exposed to the OS. Its important to know the IP addresses are linked to the ENI, not to the instance. So if IPs are linked to ENIs, they could be moved between instances by moving the ENI itself.
 - Public IP address is allocated to the instance if we launch it in a subnet where this is enabled or we explicitly enable a primary address to the instance. These public IP addresses are dynamic and they can change if the EC2 instance is moving to another EC2 host
-- Public IPs are not visible to the OS
+- Public IPs are not visible to the network interface that is running on the OS that's running on the instance. IP traffic is translated by the IGW when it leaves a VPC and the reverse happens when it arrives at a VPC. Its translated again before being passed to the EC2 instance. Its never a valid solution to any problem to configure a network interface within an OS with a Public IPv4 address within AWS because that translation happens at the IGW at the edge of the VPC.
 - In order to get static public IP addresses, we can associate an Elastic IP to the instance
 - We can allocate one public IP per private IP
-- We get charged if the Elastic IPs are not associated to instances
+- We get charged if the Elastic IPs are not associated to instances or instances are not running. You don't get charged if they're in use
 - ENIs can have 1 or more IPv6 addresses, 1 MAC address and 1 or more Security Groups
 - IPv6 addressing if enabled, all the IPv6 addresses are publicly routable
 - IPv6 addresses are always visible to the OS
@@ -123,7 +123,7 @@
     - We launch an EC2 instance and perform the necessary tasks from which we can create an AMI
     - We can use the AMI to deploy many instances quickly.
     - The tradeoff is, it harder to change the AMI.
-    - AMI baking and bootstrappig are not mutually exclusive.
+    - AMI baking and bootstrapping are not mutually exclusive.
     - <span style="color: orange;">If there are any exam question related to time taken to launch the EC2 instance, think of AMI baking.</span>
 
 ## EC2 Placement Groups

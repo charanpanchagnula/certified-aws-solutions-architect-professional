@@ -8,7 +8,7 @@
 - Files are loaded from S3, processed and stored back to S3
 - MC supports EventBridge for job signalling
 - ET/MC architecture example:
-    [ET/MC architecture](images/ElasticTranscoder&MediaConvert.png)
+    ![ET/MC architecture](images/ElasticTranscoder&MediaConvert.png)
 - We use these products when we need to the media convert in a serverless, event-driven media processing pipeline
 
 ## Choosing between ET and MC

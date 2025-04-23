@@ -5,14 +5,14 @@
 - ASGs make use of configurations defined in launch templates or launch configurations
 - ASGs are using one version of a launch template/configuration
 - ASG have 3 important values defined: *Minimum*, *Desired* and *Maximum* size. Desired size has to be more than the minimum size and less than Maximum size.
-- ASG provides on foundational job: keeps the size of running instances at the desired size
-- Archechturally ASG define where the EC2 instances are launcehd. They are attcahed to VPC and which subnets are configured within the VPC in ACG. 
+- ASG provides one foundational job: keeps the size of running instances at the desired size
+- Architecturally ASG define where the EC2 instances are launched. They are attached to VPC and which subnets are configured within the VPC in ASG. They will try to level the scaling in all subnets equally but this isn't always true.
 - **Scaling Policies**: update the desired capacity based on some metric (CPU usage, number of connections, etc.)
     - They are essentially rules defined by us which can adjust the values of an ASG
     - Scaling policies are used with ASG.
     - Scaling types:
         - **Manual Scaling** : Manually adjusts the desired capcacity.
-        - **Scheduled Scaling**: Scheduling based on know time window
+        - **Scheduled Scaling**: Scheduling based on known time window
         - **Dynamic Scaling**
         - **Predictive Scaling**: scale based on historical load to detect patterns in traffic flows
 - Dynamic Scaling has 3 subtypes:
@@ -28,7 +28,7 @@
 
 - `Launch` and `Terminate`: if Launch is suspended, the ASG wont scale out / if Terminate is suspended the ASG wont scale in
 - `AddToLoadBalancer`: add instance to LB
-- `AlarmNotification`: control is the ASG reacts to CloudWatch alarms
+- `AlarmNotification`: control if the ASG reacts to CloudWatch alarms
 - `AZRebalance`: balances instances evenly across all of AZs
 - `HealthCheck`: controls if instance health checks are on/off
 - `ReplaceUnhealthy`: controls if instances are replaced in case there are unhealthy
@@ -41,7 +41,7 @@
 - We should use cool downs to avoid rapid scaling
 - We should use smaller instances for granularity
 - ASG integrates with ALBs
-- ASG defines when and where, LT defines what
+- ASG defines when and where, Launch Templates or Launch Configurations define the what
 
 ## Lifecycle Hooks
 

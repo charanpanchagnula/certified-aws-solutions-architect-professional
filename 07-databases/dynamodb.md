@@ -1,6 +1,6 @@
 # DynamoDB
 
-- NoSQL, wide column, DB-as-service product
+- NoSQL, wide column, DB-as-service product (Not Database server as a service like RDS, Aurora)
 - DynamoDB can handle key/value data or document data
 - It requires no self-managed servers of infrastructure to be managed
 - Supports a range of scaling options:
@@ -66,6 +66,7 @@
         - When a query is performed we need to provide a partition key. Optionally we can provide a sort key or a range
         - Query item can return 0 or more items, but we have to specify the partition key every time
         - We can specify specific attribute we would want to be returned, we will be charged for querying the whole item anyway
+        - Always better to retrieve in bulk than single operation as single operation consumes at least one RCU
     - **Scan**:
         - Least efficient operation, but the most flexible
         - Scan moves through a table consuming the capacity of every item
@@ -82,7 +83,8 @@
 - There are 2 types of reads possible in DynamoDB:
     - Eventually consistent reads:
         - It might happen that we attempt to read data which is outdated (stale) / not present at all
-        - We can read double the amount of data with the same number of RCUs
+        - RCU is 4kb per second, but only for strongly consistent reads. We can read double the amount of data with the same number of RCUs for eventually consistent reads.
+        - 50% price reduction for this type
     - Strongly consistent reads:
         - These read operations always use the leader node
         - Not every application can tolerate eventual consistent reads

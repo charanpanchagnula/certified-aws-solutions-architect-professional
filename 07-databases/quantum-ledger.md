@@ -1,7 +1,7 @@
 # Amazon Quantum Ledger Database - QLDB
 
 - Part of AWS Blockchain part of products
-- It as an immutable append-only ledger-only database
+- It as an immutable append-only ledger based database
 - It provides a cryptographically verifiable transaction log
 - It is transparent: full history is always accessible
 - It is a serverless product, it provides Ledgers and Tables. We have no servers to manage

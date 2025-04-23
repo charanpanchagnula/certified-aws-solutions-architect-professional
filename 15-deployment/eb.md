@@ -23,6 +23,7 @@
 - Each environment is either a **web server tier** or a **worker tier**. The web server tier is designed to communicate with the end-users. The worker tier is designed to process work from the web tiers. Web server tier and worker tier communicate using SQS queues
 - Each environment is running a specific version at any given time
 - Each environment has its own CNAME, a CNAME SWAP can be done to exchange to environment DNS
+- Databases should be managed outside of Beanstalk
 
 ## Deployment Policies
 

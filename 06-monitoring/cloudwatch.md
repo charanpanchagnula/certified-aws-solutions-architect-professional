@@ -2,32 +2,33 @@
 
 - Provides services to ingest, store and manage metrics
 - It is a public service - provides public space endpoints
-- Many services have native management plan integration with CloudWatch, for example EC2. Also, EC2 provides external gathered information only, for metrics from inside an EC2 we can use CloudWatch agent
+- Many services have native management plane integration with CloudWatch, for example EC2. Also, EC2 provides external gathered information only, for metrics from inside an EC2 we can use CloudWatch agent
 - CloudWatch can be used from on-premises using the agent or the CloudWatch API
 - CloudWatch stores data in a persistent way
 - Data can be viewed from the console, CLI or API, but also CloudWatch also provides dashboards and anomaly detection
 - CloudWatch Alarms: react to metrics, can be used to notify or to perform actions
-- Instances in public subnet can connect to cloudwatch using Internet gateway and the instances in the private subnets can connect to the cloudwatch usig Interface Endpoint.
+- Instances in public subnet can connect to cloudwatch using Internet gateway and the instances in the private subnets can connect to the cloudwatch using Interface Endpoint.
+- CloudWatch sits in the AWS Public zone and it stores metrics and various services publish data into CW.
 
 ## CloudWatch - Data
 
-- **Namespace**: container for metrics e.g. AWS/EC2 for EC2 NS, AW/Lambda for lambda NS. Its possible to have same mertic name for different service, NS helps to segregate them.
+- **Namespace**: container for metrics e.g. AWS/EC2 for EC2 NS, AW/Lambda for lambda NS. Its possible to have same metric name for different services, NS helps to segregate them.
 - **Data point**: timestamp, value, unit of measure (optional)
-- **Metric**: time ordered set of data point. Example of builtin metrics: `CPUUtilization`, `NetworkIn`, `DiskWriteBytes` for EC2
+- **Metric**: time ordered set of data points. Example of builtin metrics: `CPUUtilization`, `NetworkIn`, `DiskWriteBytes` for EC2
 - Every metric has a `MetricName` and a namespace e.g. CPUUtilization for AWS/EC2
-- **Dimension**: name/value pair, example: a dimension is the way for `CPUUtilization` metric to be separated from one instance to another
-- Dimensions can be used to aggregate data, example aggregate data for all instances for an ASG
-- **Resolution**: standard (60 second granularity) or high (1 second granularity)
+- **Dimension**: name/value pair, example: a dimension is the way for `CPUUtilization` metric to be separated from one instance to another. You provide namespace, metric name and zero or more dimensions. Example: AWS/EC2 CPUUtilization Name=InstanceId, Value=i-11111111(cat), AWS/EC2 CPUUtilization Name=InstanceId, Value=i-222222222(dog)
+- Dimensions can be used to aggregate data, example aggregate data for all instances for an ASG.
+- **Resolution**: standard (60 second granularity) or high (1 second granularity). This means for CPUUtilization, if you published 42% with a 60 second resolution, then it would be viewed as having 42% for that entire 60 second duration.
 - **Metric resolution**: minimum period that we can get one particular data point for
 - Data retention:
     - sub 60s granularity is retained for 3 hours
-    - High resolution can be measured but they cost more. Resolution determines the minimum period which ca be specified and get a valid value. Standard (60 Sec) .. High (1 Sec)
+    - High resolution can be measured but they cost more. Resolution determines the minimum period which can be specified and get a valid value. Standard (60 Sec) .. High (1 Sec)
     - 60s granularity retained for 15 days
     - 5 min retained for 63 days
     - 1 hour retained for 455 days
 - As data ages, its aggregated and stored for longer period of time with less resolution
-- Statistics: get data over a period and aggregate it in a certain way
-- Percentile: relative standing of a value within the dataset
+- Statistics: get data over a period and aggregate it in a certain way (ex Min, Max, Sum, Average)
+- Percentile: relative standing of a value within the dataset (p95, p99)
 
 ## CloudWatch Alarms
 
@@ -43,16 +44,16 @@
 - Can provide logging ingestion for AWS products natively, but also for on-premises, IOT or any application
 - CloudWatch Agent: used to provide ingestion for custom applications
 - CloudWatch can also ingest log streams from VPC Flow Logs or CloudTrail (account events and AWS API calls)
-- CloudWatch Logs is regional service, certain global services send their logs to `us-east-1`
+- CloudWatch Logs is regional service, but certain global services send their logs to `us-east-1`
 - Log events consist of 2 parts:
     - **Timestamp**
     - **Raw message**
 - Log Events can be collected into Log Streams. Log Streams are sequence of log events sharing the same source
 - Log Groups: are collection of Log Streams. We can set retention, permissions and encryption on the log groups. By default log groups store data indefinitely
-- Metric Filter: can be defined on the log group and will look for pattern in the log events. Essentially creates a metric from the log streams by looking at occurrences of certain patterns defined by us (example: failed SSH logs in events)
+- Metric Filter: can be defined on the log group and will look for pattern in the log events. Essentially creates a metric from the log streams by looking at occurrences of certain patterns defined by us (example: failed SSH logs in events). From this metric, alarms etc can be created
 - Export logs from CloudWatch:
     - **S3 Export**: we can create an export task (`Create-Export-Task`) which will take up to 12 hours. Its not real time. It is encrypted using SSE-S3.
-    - **Subscription**: deliver logs in real time. We should create a subscription filter for the following destination: Kinesis Data Firehose (near real time), OpenSearch (ElasticSearch) using Lambda or custom Lambda, Kinesis Data Streams (any KCL consumer)
+    - **Subscription**: deliver logs in real time. This is done at a per log group basis. We should create a subscription filter for the following destination: Kinesis Data Firehose (near real time) and then to S3 or any firehose destinations, OpenSearch (ElasticSearch) using Lambda or custom Lambda, Kinesis Data Streams (any KCL consumer)
 - Subscription filters can be used to create a logging aggregation architecture
 
 ## CloudWatch Dashboards

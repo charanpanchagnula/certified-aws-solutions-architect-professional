@@ -2,7 +2,7 @@
 
 - Neptune is a managed graph database in AWS
 - A graph database is a database type where the relationships between the data is as important as the data itself
-- Neptune runs in a VPC, private by default
+- Neptune runs in a VPC, private by default. It is like RDS, but for graph style data
 - It is resilient, it can be deployed in multiple AZs and scales via read replicas
 - It does continuous backups and allows point-in-time recovery
 - Common use cases for graph based data models:

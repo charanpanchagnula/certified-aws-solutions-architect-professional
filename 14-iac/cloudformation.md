@@ -117,7 +117,7 @@
 
 ## Creation Policies, Wait Conditions and cfn-signal
 
-- Creation Policies, Wait Conditions and cfn-signals provide a few ways to notify CFN with details signals on completion or not of creation of resources
+- Creation Policies, Wait Conditions and cfn-signals provide a few ways to notify CFN with details or signals on completion or not of creation of resources
 - We can configure CFN to wait for a certain number of success signals
 - We also configure a timeout within which the signals are received (max 12H)
 - The the number of success signals are received within the timeout, CFN stacks moves to `CREATE_COMPLETE`
@@ -125,9 +125,10 @@
 - If the timeout is reached and the number of success signals are not met, the stack will fail creation
 - For provisioning EC2 and ASG, we should us a `CreationPolicy`
 - For other requirements we might chose to use a `WaitCondition`
-- A `WaitCondition` is defined as a logical resource, meaning it can have `DependsOn` property. It can be used as a general progress gait in the template
+- A `WaitCondition` is defined as a logical resource, meaning it can have `DependsOn` property. It can be used as a general progress gate in the template
 - A `WaitCondition` relies on a `WaitHandle`, which is another logical resource. Its job is to generate a presigned url which can be used to send signals to `WaitCondition`
 - With `WaitHandle` we can pass back data to the template. This data can be retrieved using the `!GetAtt WaitCondition.Data` function
+- AWS recommends `CreationPolicy` more than `WaitCondition`
 
 ## Nested Stacks
 

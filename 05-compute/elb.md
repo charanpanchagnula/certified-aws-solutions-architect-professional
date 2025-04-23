@@ -32,7 +32,7 @@
     - A piece of server side information specific to one single user of one application
     - It does persist while the user interacts with the application
     - Examples of session state: shopping cart, workflow position, login state
-- The date representing a sessions state is either stored internally or externally (stateless applications)
+- The data representing a sessions state is either stored internally or externally (stateless applications)
 - Externally hosted session:
     - Session data is hosted outside of the back-end instances => application becomes stateless
     - Offers the possibility to do load balancing for the back-end instances, the session wont get lost in case the LB redirects the user to a different instance
@@ -130,9 +130,9 @@
 - This header is added/appended by proxies/load balancers. It can have multiple values in case the request is passing multiple proxies/load balancers. E.g X-Forwarded-For: 1.3.3.7(ClientIP), proxy1, proxy2..
 - The backend server needs to be aware of this header and needs to support it
 - Supported on CLB and ALB, NLB does not supports it because they don't support the layer 7 of the OSI stack.
-- PROXY protocol works at Layer 4, it is an additional layer 4 (tcp) header => works with a wide range or protocols (including HTTP/HTTPS)
+- PROXY protocol works at Layer 4, it is an additional layer 4 (tcp) header => works with a wide range of protocols (including HTTP/HTTPS)
 - There are 2 versions of PROXY protocol:
     - v1: human readable, works with CLB
     - v2: binary encoded, works with NLB
 - v2 can support an unbroken HTTPS connection (tcp listener). Use case for this: end to end encryption
-- When using PROXY protocol, we can add a HTTP header, the request is not decrypted
+- When using PROXY protocol for unbroken HTTPS connection, You cannot add a HTTP header (the client IP info is added at the TCP level), the request is not decrypted

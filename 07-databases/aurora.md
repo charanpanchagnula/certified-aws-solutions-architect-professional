@@ -41,7 +41,7 @@
 - Backups in Aurora work the same way as other RDS
 - Restores create a new cluster
 - Backtrack can be enabled per cluster. They allow in-place rewinds to a previous point-in-time
-- Fast clone: makes a new database much faster than copying all the data. Aurora references the original storage, only stores any differences between the old data and the new one
+- Fast clone: makes a new database much faster than copying all the data. Aurora references the original storage, only stores any differences between the old data and the new one (Copy on write)
 
 ## Aurora Serverless
 
@@ -56,11 +56,11 @@
 - ACUs are stateless, shared across multiple AWS customers
 - If the load increases beyond the ACU limit and the pool allows it, than more ACU will be allocated to the instance
 - In Aurora Serverless we have shared Proxy Fleet for connection management:
-    - It is used to distribute connections from us, Aurora users, to Aurora capacity units
-    - We never directly connect to Aurora, this makes Aurora scaling seamless
+    - It is used to distribute connections from us, Aurora users, to Aurora capacity units via these proxy fleets
+    - We never directly connect to ACU, this makes Aurora scaling seamless. We only need to pick min ACU and max ACU while provisioning Aurora.
 - Aurora use cases:
     - Infrequently used applications
-    - New applications where we are unsure about the levels of load that will be places on the application
+    - New applications where we are unsure about the levels of load that will be placed on the application
     - Variable and/or unpredictable workloads
     - Development and test databases: Aurora can be configured to stop itself
     - Multi-tenant applications where the scaling is aligned with infrastructure size and revenue
@@ -69,7 +69,8 @@
 
 - Default Aurora mode is single-master: one read/write endpoint and 0 or more read replicas
 - In contrast with default mode for Aurora, multi-master offers multiple endpoints which can be used for reads and writes
-- There is no cluster endpoint to use, the application is responsible for connection to instances in the cluster
+- There is no cluster endpoint to use, the application is responsible for connection to specific instances in the cluster. There is no load balancing to instances, we have to connect to specific instances in the cluster.
+- Writes involve an instance committing to all the underlying storage volumes and achieving quorum. After this, the replication to other instances is performed to update all in memory caches for instances for read operations.
 - Benefits:
     - Multiple writer endpoints, if we have an application which can failover between endpoints, the failover time can be significantly reduced
     - Fault tolerance can be implemented at the application level, but the application needs to manually load balance between the instances

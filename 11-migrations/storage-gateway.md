@@ -60,7 +60,7 @@
 - For Windows environments we can use AD authentication to access the File Gateway
 - File Mode can be used for multiple contributors (multiple shares on-premises)
 - File paths in a File Gateway map directly to S3 object names
-- `NotifyWhenUploaded`: API to notify other gateways when objects are changed
-- File Gateway does not support any kind of object locking => one gateway can override files from another gateway. We should use a read only mode on other shares or tightly control file access
+- `NotifyWhenUploaded`: API to notify other gateways when objects are changed (if two or more gateways are linked to the same bucket share)
+- File Gateway does not support any kind of object locking => one gateway can override files from another gateway. We should use a read only mode on other shares or tightly control file access (This is again when two or more gateways are linked to the same bucket)
 - The bucket backing the File Gateway can be used with cross-region replication (CRR)
 - The lifecycle policies can also be used for files to be moved automatically between classes

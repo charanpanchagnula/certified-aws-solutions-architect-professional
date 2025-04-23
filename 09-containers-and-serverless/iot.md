@@ -7,11 +7,11 @@
 - AWS IoT Core is a product set in AWS, used for managing millions of IoT devices
 - IoT devices can be temp, wind, water sensors, light sensors, valve control sensors, etc.
 - All of these need to be registered into a system to allow secure communication for managing them: provisioning, updates and control
-- Communication to or from devices is likely to be unreliable, so AWS provides *device shadows*: virtual representations of actual devices, having the same configuration registered for the actual device. We can read from them the last communicated data, essentially the device communicates with the shadow, the last registered data can be retrieved anytime afterwards
-- Device messages are sent JSON format, using MQTT protocols
+- Communication to or from devices is likely to be using low power channels and is unreliable, so AWS provides *device shadows*: virtual representations of actual devices, having the same configuration registered for the actual device. We can read from them the last communicated data, essentially the device communicates with the shadow, the last registered data can be retrieved anytime afterwards
+- Device messages are sent via JSON format, using MQTT protocols
 - AWS IoT provides rules: event-driven integration with other AWS Services
 - AWS IoT architecture:
-    [AWS IoT architecture](images/ElasticTranscoder&AWSIoT.png)
+    ![AWS IoT architecture](images/AWSIoT.png)
 
 ## AWS IoT Device Management
 

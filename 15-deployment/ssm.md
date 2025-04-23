@@ -41,4 +41,5 @@
 - Patch Baselines:
     - For Linux: `AWS-[OS]DefaultPatchBaseline` - explicitly defines patches, example: `AWS-AmazonLinux2DefaultPatchBaseline`, `AWS-UbuntuDefaultPatchBaseline` - contain security updates and any critical update
     - For Windows: `AWS-DefaultPatchBaseline`, `AWS-WindowsPredefinedPatchBaseline-OS`, `AWS-WindowsPredefinedPatchBaseline-OS-Application` - Contains patches for MS applications as well.
+- `AWS-RunPatchbaseline` runs with a baseline and targets and this run command is used to actually patch the machines.
 
