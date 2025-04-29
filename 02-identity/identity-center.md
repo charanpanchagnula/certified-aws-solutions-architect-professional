@@ -1,4 +1,4 @@
-# IAM Identity Center (Successor to AWS Single Sing-On - SSO)
+# IAM Identity Center (Successor to AWS Single Sign-On - SSO)
 
 - A way to use existing enterprise identity store with AWS
 - Allows to centrally manage SSO access to multiple AWS accounts and external business applications as well

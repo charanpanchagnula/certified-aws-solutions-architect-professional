@@ -14,7 +14,7 @@
 - **Guard Rails**: used to detect/mandate rules and standards across all accounts
 - **Account Factory**: automates and standardizes new account creation
 - **Dashboard**: single page oversight of the entire environment
-- When Control Tower is set up, it creates to OUs:
+- When Control Tower is set up, it creates two OUs:
     - Foundational OU (security)
     - Custom OU (sandbox)
 - Inside the Foundational OU Control Tower creates two accounts:

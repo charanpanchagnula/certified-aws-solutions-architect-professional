@@ -18,7 +18,7 @@
 - A Direct Connect is a physical port allocated at a DX Location
 - This physical port provides 1, 10 or 100 Gbps speed
 - DX can be ordered directly from AWS or through partners (wider range of speeds, with less options)
-- The port requires single-mod fibre, NO copper cable connection supported
+- The port requires single-mode fibre, NO copper cable connection supported
 - Depending on the speed we order we will interface with DX using the following standards:
     - **1000BASE-LX** (1310 nm) Transreceiver for 1 Gbps
     - **10GBASE-LR** (1310 nm) Transreceiver for 10 Gbps
